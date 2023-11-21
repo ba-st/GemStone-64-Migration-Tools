@@ -50,7 +50,7 @@ StdoutInstanceMigrationReporter >> loadFinished [
 		reportClassesWithNewVersions;
 		reportRemovedClasses;
 		printEmptyLine;
-		printLine: 'Reporting finished.'
+		printLine: [ :s | s << 'Reporting finished.' ]
 ]
 
 { #category : 'migration' }
