@@ -14,6 +14,12 @@ StdoutInstanceMigrationReporter class >> install [
 	Rowan platform instanceMigrator: self aggressiveMigration
 ]
 
+{ #category : 'instance creation' }
+StdoutInstanceMigrationReporter class >> new [
+
+	^super new initialize 
+]
+
 { #category : 'migration' }
 StdoutInstanceMigrationReporter >> aboutToRemoveClass: classToRemove [
 	"This message is sent before a class deletion patch is applied.
