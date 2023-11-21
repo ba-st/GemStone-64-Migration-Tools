@@ -1,0 +1,19 @@
+RwSimpleProjectLoadComponentV2 {
+  #name : 'Deployment',
+  #projectNames : [ ],
+  #componentNames : [ ],
+  #packageNames : [
+    'GS64-Migration-Tools',
+    'GS64-Migration-Tools-Rowan-Extensions'
+  ],
+  #conditionalPackageMapSpecs : {
+    'gemstone' : {
+      'allusers' : {
+        #packageNameToPlatformPropertiesMap : {
+          'GS64-Migration-Tools' : { 'symbolDictName' : 'GS64MigrationTools' },
+          'GS64-Migration-Tools-Rowan-Extensions' : { 'symbolDictName' : 'RowanLoader' }
+        }
+      }
+    }
+  }
+}
