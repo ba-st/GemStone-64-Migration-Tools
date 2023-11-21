@@ -134,7 +134,7 @@ StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 
 	classesWithNewVersions ifNotEmpty: [
 		self printBanner: [ :s |
-			s << classesWithNewVersions size asString << ' classes have new versions' ].
+			s << ' ' << classesWithNewVersions size asString << ' classes have new versions' ].
 
 		( self sortClassesByName: classesWithNewVersions ) do: [ :classWithNewVersion |
 			self printWarning: [ :s | s << '- ' << classWithNewVersion name asString ] ]
@@ -146,7 +146,7 @@ StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 StdoutInstanceMigrationReporter >> reportRemovedClasses [
 
 	removedClasses ifNotEmpty: [
-		self printBanner: [ :s | s << removedClasses size asString << ' classes were removed' ].
+		self printBanner: [ :s | s << ' ' << removedClasses size asString << ' classes were removed' ].
 
 		( self sortClassesByName: removedClasses ) do: [ :removedClass |
 			self printWarning: [ :s | s << '- ' << removedClass name asString ] ].
