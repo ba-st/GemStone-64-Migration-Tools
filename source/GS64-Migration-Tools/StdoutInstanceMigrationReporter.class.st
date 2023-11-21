@@ -2,7 +2,8 @@ Class {
 	#name : 'StdoutInstanceMigrationReporter',
 	#superclass : 'RwGsInstanceMigrator',
 	#instVars : [
-		'removedClasses'
+		'removedClasses',
+		'classesWithNewVersions'
 	],
 	#category : 'GS64-Migration-Tools',
 	#package : 'GS64-Migration-Tools'
@@ -34,22 +35,30 @@ StdoutInstanceMigrationReporter >> aboutToRemoveClass: classToRemove [
 { #category : 'initialization' }
 StdoutInstanceMigrationReporter >> initialize [
 
-	super initialize .
-	self resetRemovedClasses
+	super initialize.
+	self
+		resetClassesWithNewVersions;
+		resetRemovedClasses
 ]
 
 { #category : 'migration' }
-StdoutInstanceMigrationReporter >> migrateInstancesOf: classesWithNewVersions [
-	"This message is sent once a patch set ends loading changes.
-	classesWithNewVersions contains a list of the old class versions"
+StdoutInstanceMigrationReporter >> loadFinished [
 
 	self
 		printLine: [ :s | s << 'Finished loading code changes.' ];
 		printLine: [ :s | s << 'Reporting classes requiring special attention for migration purposes...' ];
-		reportClassesWithNewVersions: classesWithNewVersions;
+		reportClassesWithNewVersions;
 		reportRemovedClasses;
 		printEmptyLine;
 		printLine: 'Reporting finished.'
+]
+
+{ #category : 'migration' }
+StdoutInstanceMigrationReporter >> migrateInstancesOf: classes [
+	"This message is sent once a patch set ends loading changes.
+	classesWithNewVersions contains a list of the old class versions"
+
+	classesWithNewVersions addAll: classes
 ]
 
 { #category : 'private - printing' }
@@ -121,7 +130,7 @@ StdoutInstanceMigrationReporter >> printWarning: aBlock [
 ]
 
 { #category : 'private - reporting' }
-StdoutInstanceMigrationReporter >> reportClassesWithNewVersions: classesWithNewVersions [
+StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 
 	classesWithNewVersions ifNotEmpty: [
 		self printBanner: [ :s |
@@ -129,7 +138,8 @@ StdoutInstanceMigrationReporter >> reportClassesWithNewVersions: classesWithNewV
 
 		( self sortClassesByName: classesWithNewVersions ) do: [ :classWithNewVersion |
 			self printWarning: [ :s | s << '- ' << classWithNewVersion name asString ] ]
-		]
+		].
+	self resetClassesWithNewVersions
 ]
 
 { #category : 'private - reporting' }
@@ -142,6 +152,12 @@ StdoutInstanceMigrationReporter >> reportRemovedClasses [
 			self printWarning: [ :s | s << '- ' << removedClass name asString ] ].
 		self resetRemovedClasses
 		]
+]
+
+{ #category : 'initialization' }
+StdoutInstanceMigrationReporter >> resetClassesWithNewVersions [
+
+	classesWithNewVersions := OrderedCollection new
 ]
 
 { #category : 'initialization' }

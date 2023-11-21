@@ -1,6 +1,6 @@
 Extension { #name : 'RwGsClassDeletionSymbolDictPatchV2' }
 
-{ #category : '*GS64-Migration-Tools-Rowan-Extensions' }
+{ #category : '*GS64-Migration-Tools-Rowan-Loader-Extensions' }
 RwGsClassDeletionSymbolDictPatchV2 >> deleteClassFromSystem [
 
 	( Rowan globalNamed: self className )
