@@ -1,0 +1,9 @@
+RwLoadSpecificationV2 {
+  #specName: 'GemStone-64-Migration-Tools-Deployment',
+  #projectName : 'GemStone-64-Migration-Tools',
+  #diskUrl : 'GemStone-64-Migration-Tools',
+  #projectSpecFile : 'rowan/project.ston',
+  #componentNames : [
+    'Deployment'
+  ]
+}

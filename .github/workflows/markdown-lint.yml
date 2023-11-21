@@ -1,0 +1,17 @@
+name: Markdown Lint
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
+jobs:
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: markdownlint
+        uses: reviewdog/action-markdownlint@v0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_error: true
+          reporter: github-pr-review
