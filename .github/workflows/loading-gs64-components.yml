@@ -18,5 +18,5 @@ jobs:
       - name: Load component in image
         uses: ba-st-actions/gs64-ci@v2
         with:
-          project_name: 'GemStone-64-MIgration-Tools'
-          load_spec: 'GemStone-64-MIgration-Tools-${{ matrix.load-spec }}'
+          project_name: 'GemStone-64-Migration-Tools'
+          load_spec: 'GemStone-64-Migration-Tools-${{ matrix.load-spec }}'
