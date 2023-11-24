@@ -44,11 +44,13 @@ StdoutInstanceMigrationReporter >> initialize [
 { #category : 'migration' }
 StdoutInstanceMigrationReporter >> loadFinished [
 
-	self
+	StdoutReporter
 		printLine: [ :s | s << 'Finished loading code changes.' ];
-		printLine: [ :s | s << 'Reporting classes requiring special attention for migration purposes...' ];
+		printLine: [ :s | s << 'Reporting classes requiring special attention for migration purposes...' ].
+	self
 		reportClassesWithNewVersions;
-		reportRemovedClasses;
+		reportRemovedClasses.
+	StdoutReporter
 		printEmptyLine;
 		printLine: [ :s | s << 'Reporting finished.' ]
 ]
@@ -61,83 +63,15 @@ StdoutInstanceMigrationReporter >> migrateInstancesOf: classes [
 	classesWithNewVersions addAll: classes
 ]
 
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printBanner: aBlock [
-
-	self
-		printEmptyLine;
-		printInfo: [ :s | s << '##################################################' ];
-		printInfo: aBlock;
-		printInfo: [ :s | s << '##################################################' ];
-		printEmptyLine
-]
-
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printEmptyLine [
-
-	self printLine: [ :s |  ]
-]
-
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printError: aBlock [
-
-	self printLine: [ :s |
-		s << Character esc << '[1m'.
-		s << Character esc << '[31m'.
-		aBlock value: s.
-		s << Character esc << '[0m'
-		]
-]
-
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printInfo: aBlock [
-
-	self printLine: [ :s |
-		s << Character esc << '[1m'.
-		s << Character esc << '[34m'.
-		aBlock value: s.
-		s << Character esc << '[0m'
-		]
-]
-
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printLine: aBlock [
-
-  aBlock value: GsFile stdout.
-  GsFile stdout lf; flush
-]
-
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printSuccess: aBlock [
-
-	self printLine: [ :s |
-		s << Character esc << '[1m'.
-		s << Character esc << '[32m'.
-		aBlock value: s.
-		s << Character esc << '[0m'
-		]
-]
-
-{ #category : 'private - printing' }
-StdoutInstanceMigrationReporter >> printWarning: aBlock [
-
-	self printLine: [ :s |
-		s << Character esc << '[1m'.
-		s << Character esc << '[33m'.
-		aBlock value: s.
-		s << Character esc << '[0m'
-		]
-]
-
 { #category : 'private - reporting' }
 StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 
 	classesWithNewVersions ifNotEmpty: [
-		self printBanner: [ :s |
+		StdoutReporter printBanner: [ :s |
 			s << ' ' << classesWithNewVersions size asString << ' classes have new versions' ].
 
 		( self sortClassesByName: classesWithNewVersions ) do: [ :classWithNewVersion |
-			self printWarning: [ :s | s << '- ' << classWithNewVersion name asString ] ]
+			StdoutReporter printWarning: [ :s | s << '- ' << classWithNewVersion name asString ] ]
 		].
 	self resetClassesWithNewVersions
 ]
@@ -146,10 +80,10 @@ StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 StdoutInstanceMigrationReporter >> reportRemovedClasses [
 
 	removedClasses ifNotEmpty: [
-		self printBanner: [ :s | s << ' ' << removedClasses size asString << ' classes were removed' ].
+		StdoutReporter printBanner: [ :s | s << ' ' << removedClasses size asString << ' classes were removed' ].
 
 		( self sortClassesByName: removedClasses ) do: [ :removedClass |
-			self printWarning: [ :s | s << '- ' << removedClass name asString ] ].
+			StdoutReporter printWarning: [ :s | s << '- ' << removedClass name asString ] ].
 		self resetRemovedClasses
 		]
 ]

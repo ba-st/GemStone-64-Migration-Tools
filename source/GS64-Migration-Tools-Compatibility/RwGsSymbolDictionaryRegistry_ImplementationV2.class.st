@@ -1,3 +1,7 @@
+"
+This version is just a placeholder so we can easily create extensions methods to load in GS64 specific
+packages.
+"
 Class {
 	#name : 'RwGsSymbolDictionaryRegistry_ImplementationV2',
 	#superclass : 'Object',
