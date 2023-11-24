@@ -45,14 +45,14 @@ StdoutInstanceMigrationReporter >> initialize [
 StdoutInstanceMigrationReporter >> loadFinished [
 
 	StdoutReporter
-		printLine: [ :s | s << 'Finished loading code changes.' ];
-		printLine: [ :s | s << 'Reporting classes requiring special attention for migration purposes...' ].
+		printLine: [ :out | out << 'Finished loading code changes.' ];
+		printLine: [ :out | out << 'Reporting classes requiring special attention for migration purposes...' ].
 	self
 		reportClassesWithNewVersions;
 		reportRemovedClasses.
 	StdoutReporter
 		printEmptyLine;
-		printLine: [ :s | s << 'Reporting finished.' ]
+		printLine: [ :out | out << 'Reporting finished.' ]
 ]
 
 { #category : 'migration' }
@@ -67,11 +67,11 @@ StdoutInstanceMigrationReporter >> migrateInstancesOf: classes [
 StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 
 	classesWithNewVersions ifNotEmpty: [
-		StdoutReporter printBanner: [ :s |
-			s << ' ' << classesWithNewVersions size asString << ' classes have new versions' ].
+		StdoutReporter printBanner: [ :out |
+			out << ' ' << classesWithNewVersions size asString << ' classes have new versions' ].
 
 		( self sortClassesByName: classesWithNewVersions ) do: [ :classWithNewVersion |
-			StdoutReporter printWarning: [ :s | s << '- ' << classWithNewVersion name asString ] ]
+			StdoutReporter printWarning: [ :out | out << '- ' << classWithNewVersion name asString ] ]
 		].
 	self resetClassesWithNewVersions
 ]
@@ -80,10 +80,11 @@ StdoutInstanceMigrationReporter >> reportClassesWithNewVersions [
 StdoutInstanceMigrationReporter >> reportRemovedClasses [
 
 	removedClasses ifNotEmpty: [
-		StdoutReporter printBanner: [ :s | s << ' ' << removedClasses size asString << ' classes were removed' ].
+		StdoutReporter printBanner: [ :out |
+			out << ' ' << removedClasses size asString << ' classes were removed' ].
 
 		( self sortClassesByName: removedClasses ) do: [ :removedClass |
-			StdoutReporter printWarning: [ :s | s << '- ' << removedClass name asString ] ].
+			StdoutReporter printWarning: [ :out | out << '- ' << removedClass name asString ] ].
 		self resetRemovedClasses
 		]
 ]
