@@ -3,7 +3,7 @@ This version is just a placeholder so we can easily create extensions methods to
 packages.
 "
 Class {
-	#name : 'RwGsClassDeletionSymbolDictPatchV2',
+	#name : 'Metaclass3',
 	#superclass : 'Object',
 	#category : 'GS64-Migration-Tools-Compatibility',
 	#package : 'GS64-Migration-Tools-Compatibility'
