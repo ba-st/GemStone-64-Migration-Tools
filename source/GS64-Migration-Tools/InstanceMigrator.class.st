@@ -22,7 +22,7 @@ InstanceMigrator class >> new [
 	^ super new initialize
 ]
 
-{ #category : 'migration' }
+{ #category : 'configuring' }
 InstanceMigrator >> aboutToRemoveClass: classToRemove [
 	"This message is sent before a class deletion patch is applied.
 	Classes can be removed for two reasons: a real removal or a
@@ -36,25 +36,9 @@ InstanceMigrator >> aboutToRemoveClass: classToRemove [
 { #category : 'private - actions' }
 InstanceMigrator >> applyMigrationScript: script [
 
-	| instancesListing oldClasses |
-
-	oldClasses := OrderedCollection new.
-	script classNamesToMigrateToLatestVersion do: [ :className |
-		| oldClassOrNil |
-
-		oldClassOrNil := classesWithNewVersions detect: [ :class | class name = className ] ifNone: [
-			                 self migrationFailed.
-			                 StdoutReporter printError: [ :out |
-				                 out << 'There''s no class named ' << className
-				                 << ' in the list of classes with new versions. Review you migration scripts.'
-				                 ].
-			                 nil
-			                 ].
-		oldClassOrNil ifNotNil: [ oldClasses add: oldClassOrNil ]
-		].
-	instancesListing := self instancesListingForAll: oldClasses.
-	oldClasses doWithIndex: [ :oldClass :classIndex |
-		self migrate: ( instancesListing at: classIndex * 2 ) of: oldClass ]
+	self
+		migrateClassesToLatestVersionFor: script;
+		migrateInstancesOfRenamedClassesFor: script
 ]
 
 { #category : 'private - actions' }
@@ -124,10 +108,16 @@ InstanceMigrator >> commit [
 InstanceMigrator >> initialize [
 
 	super initialize.
-	migrationFailed := false.
 	self
+		initializeMigrationStatus;
 		resetClassesWithNewVersions;
 		resetRemovedClasses
+]
+
+{ #category : 'initialization' }
+InstanceMigrator >> initializeMigrationStatus [
+
+	migrationFailed := false
 ]
 
 { #category : 'private - accessing' }
@@ -146,17 +136,15 @@ InstanceMigrator >> instancesListingForAll: classes [
 InstanceMigrator >> loadFinished [
 
 	StdoutReporter printLine: [ :out | out << 'Finished loading code changes.' ].
-	migrationFailed := false.
+
 	self
+		initializeMigrationStatus;
 		applyMigrationScripts;
 		reportClassesWithNewVersionsNotMigrated;
 		reportRemovedClassesWithInstancesNotMigrated;
 		runGarbageCollection;
-		runConsistencyChecks.
-
-	self migrationWasSuccessfull
-		ifTrue: [ StdoutReporter printSuccess: [ :out | out << 'Migration finished successfully.' ] ]
-		ifFalse: [ StdoutReporter printError: [ :out | out << 'Migration finished with errors.' ] ].
+		runConsistencyChecks;
+		reportMigrationResult.
 
 	^ self migrationWasSuccessfull
 ]
@@ -174,7 +162,6 @@ InstanceMigrator >> migrate: instances of: oldClass [
 		classVersion := classHistory first.
 		classVersion classHistory removeVersion: classVersion
 		].
-	classesWithNewVersions remove: oldClass.
 	self commit
 ]
 
@@ -191,12 +178,76 @@ InstanceMigrator >> migrate: instances of: oldClass to: newClass [
 	self checkErrorsIn: migrationReport
 ]
 
-{ #category : 'migration' }
+{ #category : 'private - actions' }
+InstanceMigrator >> migrateClassesToLatestVersionFor: script [
+
+	| oldClasses instancesListing |
+
+	oldClasses := OrderedCollection new.
+	script classNamesToMigrateToLatestVersion do: [ :className |
+		| oldClassOrNil |
+
+		oldClassOrNil := classesWithNewVersions detect: [ :class | class name = className ] ifNone: [
+			                 self migrationFailed.
+			                 StdoutReporter printError: [ :out |
+				                 out << 'There''s no class named ' << className
+				                 << ' in the list of classes with new versions. Review you migration scripts.'
+				                 ].
+			                 nil
+			                 ].
+		oldClassOrNil ifNotNil: [
+			oldClasses add: oldClassOrNil.
+			classesWithNewVersions remove: oldClassOrNil
+			]
+		].
+	instancesListing := self instancesListingForAll: oldClasses.
+	oldClasses doWithIndex: [ :oldClass :classIndex |
+		self migrate: ( instancesListing at: classIndex * 2 ) of: oldClass ]
+]
+
+{ #category : 'configuring' }
 InstanceMigrator >> migrateInstancesOf: classes [
 	"This message is sent once a patch set ends loading changes.
 	classesWithNewVersions contains a list of the old class versions"
 
 	classesWithNewVersions addAll: classes
+]
+
+{ #category : 'private - actions' }
+InstanceMigrator >> migrateInstancesOfRenamedClassesFor: script [
+
+	| oldClasses newClasses instancesListing |
+
+	oldClasses := OrderedCollection new.
+	newClasses := OrderedCollection new.
+	script classRenameMappings do: [ :mapping |
+		| oldClassOrNil oldClassName |
+
+		oldClassName := mapping key.
+		oldClassOrNil := removedClasses
+			                 detect: [ :class | class name = oldClassName ]
+			                 ifNone: [ self notFoundRemovedClassNamed: oldClassName ].
+		oldClassOrNil ifNotNil: [
+			| newClassOrNil newClassName |
+
+			newClassName := mapping value.
+
+			newClassOrNil := Rowan image resolveClassNamed: newClassName.
+			newClassOrNil ifNil: [ self notFoundRenameTargetClassNamed: newClassName ] ifNotNil: [
+				oldClasses add: oldClassOrNil.
+				newClasses add: newClassOrNil.
+				removedClasses remove: oldClassOrNil
+				]
+			]
+		].
+	instancesListing := self instancesListingForAll: oldClasses.
+	oldClasses doWithIndex: [ :oldClass :classIndex |
+		| newClass |
+
+		newClass := newClasses at: classIndex.
+		self migrate: ( instancesListing at: classIndex * 2 ) of: oldClass to: newClass.
+		self commit
+		]
 ]
 
 { #category : 'private - actions' }
@@ -223,6 +274,27 @@ InstanceMigrator >> migrationWasSuccessfull [
 ]
 
 { #category : 'private - actions' }
+InstanceMigrator >> notFoundRemovedClassNamed: className [
+
+	self migrationFailed.
+	StdoutReporter printError: [ :out |
+		out << 'There''s no class named ' << className
+		<< ' in the list of removed classes to rename. Review you migration scripts.'
+		].
+	^ nil
+]
+
+{ #category : 'private - actions' }
+InstanceMigrator >> notFoundRenameTargetClassNamed: className [
+
+	self migrationFailed.
+	StdoutReporter printError: [ :out |
+		out << 'There''s no class named ' << className
+		<< ' and it''s used as the target in a rename. Review you migration scripts.'
+		]
+]
+
+{ #category : 'private - reporting' }
 InstanceMigrator >> reportClassesWithNewVersionsNotMigrated [
 
 	classesWithNewVersions ifNotEmpty: [
@@ -239,7 +311,15 @@ InstanceMigrator >> reportClassesWithNewVersionsNotMigrated [
 	self resetClassesWithNewVersions
 ]
 
-{ #category : 'private - actions' }
+{ #category : 'private - reporting' }
+InstanceMigrator >> reportMigrationResult [
+
+	self migrationWasSuccessfull
+		ifTrue: [ StdoutReporter printSuccess: [ :out | out << 'Migration finished successfully.' ] ]
+		ifFalse: [ StdoutReporter printError: [ :out | out << 'Migration finished with errors.' ] ]
+]
+
+{ #category : 'private - reporting' }
 InstanceMigrator >> reportRemovedClassesWithInstancesNotMigrated [
 
 	| instancesListing removedClassesWithInstances |
