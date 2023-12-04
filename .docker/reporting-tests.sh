@@ -31,9 +31,7 @@ function print_error() {
 }
 
 function executeInDocker() {
-  rm -rf logs out err
-  docker exec gs64-migration "$@" > out 2> err || true
-  cat out
+  docker exec gs64-migration "$@"
 }
 
 function assertMigrationLogIncludes() {
