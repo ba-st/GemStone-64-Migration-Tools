@@ -35,7 +35,7 @@ function executeInDocker() {
 }
 
 function assertMigrationLogIncludes() {
-  docker exec gs64-migration ./scripts/assertMigrationLogIncludesMessage.sh "$1"
+  executeInDocker ./scripts/assertMigrationLogIncludesMessage.sh "$1"
 }
 
 set -e
@@ -82,6 +82,10 @@ docker exec --workdir /opt/gemstone/projects/GS64-Migration-Examples \
 executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
   GS64-Migration-Examples
+
+"Checking migration result"
+
+executeInDocker ./checkMigrationWasSuccessful.sh
 
 print_info "Stopping stone"
 docker stop gs64-migration
