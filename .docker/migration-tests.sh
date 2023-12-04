@@ -30,6 +30,11 @@ function print_error() {
   fi
 }
 
+function executeInDocker() {
+  rm -rf logs out err
+  docker exec gs64-migration "$@" > out 2> err || true
+}
+
 set -e
 
 print_info "Starting stone"
@@ -40,6 +45,12 @@ docker run --rm --detach --name gs64-migration \
   ghcr.io/ba-st/gs64-rowan:v3.7.0
 
 sleep 1
+
+print_info "Loading Migration Tools"
+
+executeInDocker ./load-rowan-project.sh \
+  GemStone-64-Migration-Tools \
+  GemStone-64-Migration-Tools-Deployment
 
 print_info "Stopping stone"
 docker stop gs64-migration
