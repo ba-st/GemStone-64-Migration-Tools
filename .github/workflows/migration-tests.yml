@@ -1,0 +1,14 @@
+name: Migration Tests
+on:
+  - push
+  - pull_request
+  - workflow_dispatch
+jobs:
+   unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Run instance migration reporting tests using Docker
+        run: ./.docker/pharo/reporting-tests.sh
