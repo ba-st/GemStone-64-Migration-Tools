@@ -43,6 +43,7 @@ print_info "Starting stone"
 docker run --rm --detach --name gs64-migration \
   -e TZ="America/Argentina/Buenos_Aires" \
   --volume="$PWD":/opt/gemstone/projects/GemStone-64-Migration-Tools:ro \
+  --volume="$PWD":/opt/gemstone/scripts:ro \
   ghcr.io/ba-st/gs64-rowan:v3.7.0
 
 sleep 1
@@ -58,6 +59,18 @@ print_info "Loading Migration Examples base version"
 executeInDocker git clone -b base \
   https://github.com/ba-st/GS64-Migration-Examples.git \
   /opt/gemstone/projects/GS64-Migration-Examples
+
+executeInDocker ./load-rowan-project.sh \
+  GS64-Migration-Examples \
+  GS64-Migration-Examples
+
+print_info "Configuring instance migration reporter"
+
+executeInDocker ./scripts/installInstanceMigrationReporter.sh
+
+print_info "Loading Migration Examples successful_migration version"
+
+executeInDocker cd /opt/gemstone/projects/GS64-Migration-Examples && git checkout successful_migration
 
 executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
