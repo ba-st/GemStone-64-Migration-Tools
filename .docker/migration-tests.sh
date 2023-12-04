@@ -83,7 +83,7 @@ executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
   GS64-Migration
 
-"Checking migration result"
+print_info "Checking migration result"
 
 executeInDocker ./checkMigrationWasSuccessful.sh
 
