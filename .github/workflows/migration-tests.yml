@@ -11,4 +11,4 @@ jobs:
         with:
           fetch-depth: 2
       - name: Run instance migration reporting tests using Docker
-        run: ./.docker/pharo/reporting-tests.sh
+        run: ./.docker/reporting-tests.sh
