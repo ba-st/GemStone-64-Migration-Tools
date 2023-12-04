@@ -38,7 +38,10 @@ if [ "$status" -eq 0 ];then
   print_success "Migration ended successfully"
   exit 0
 else
-  print_error "Migration failed"
+  print_error "####################"
+  print_error " Migration failed"
+  print_error "####################"
+  print_info "Details of the process:\n"
   cat /opt/gemstone/logs/loading-rowan-projects.log
   exit 1
 fi
