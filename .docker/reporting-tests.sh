@@ -42,6 +42,8 @@ set -e
 
 print_info "Starting stone"
 
+docker pull ghcr.io/ba-st/gs64-rowan:v3.7.0
+
 docker run --rm --detach --name gs64-migration \
   -e TZ="America/Argentina/Buenos_Aires" \
   --volume="$PWD":/opt/gemstone/projects/GemStone-64-Migration-Tools:ro \
