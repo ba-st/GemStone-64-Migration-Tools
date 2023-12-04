@@ -123,6 +123,7 @@ InstanceMigrator >> initializeMigrationStatus [
 { #category : 'private - accessing' }
 InstanceMigrator >> instancesListingForAll: classes [
 
+	self commit.
 	^ SystemRepository
 		  listInstances: classes asArray
 		  limit: 0
