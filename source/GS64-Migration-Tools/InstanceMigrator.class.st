@@ -55,7 +55,7 @@ InstanceMigrator >> applyMigrationScripts [
 		printInfo: [ :out | out << 'There''s ' << scripts size asString << ' scripts to apply.' ].
 	scripts doWithIndex: [ :script :index |
 		StdoutReporter printLine: [ :out |
-			out << 'Applying script ' << index asString << '/' << scripts size ].
+			out << 'Applying script ' << index asString << '/' << scripts size asString ].
 		self applyMigrationScript: script
 		]
 ]
