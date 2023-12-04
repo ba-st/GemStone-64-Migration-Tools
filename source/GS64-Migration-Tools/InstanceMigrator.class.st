@@ -262,7 +262,7 @@ InstanceMigrator >> migrationScripts [
 	| scriptClasses |
 
 	scriptClasses := ( GemStone64MigrationScript allSubclasses reject: [ :class | class isAbstract ] )
-		                 sorted: [ :a :b | a priority > b priority ].
+		                 sortWithBlock: [ :a :b | a priority > b priority ].
 
 	^ scriptClasses collect: [ :class | class new ]
 ]
