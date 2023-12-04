@@ -82,7 +82,12 @@ executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
   GS64-Migration-Examples
 
+print_info "Running Assertions"
 assertMigrationLogIncludes "5 classes have new versions"
+print_success " - Number of classes with new versions [OK]"
+
+assertMigrationLogIncludes "7 classes were removed"
+print_success " - Number of removed classes [OK]"
 
 print_info "Stopping stone"
 docker stop gs64-migration
