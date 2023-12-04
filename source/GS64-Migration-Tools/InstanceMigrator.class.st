@@ -253,7 +253,8 @@ InstanceMigrator >> migrateInstancesOfRenamedClassesFor: script [
 { #category : 'private - actions' }
 InstanceMigrator >> migrationFailed [
 
-	migrationFailed := true
+	migrationFailed := true.
+	self commit
 ]
 
 { #category : 'private - accessing' }
