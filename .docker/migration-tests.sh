@@ -52,5 +52,7 @@ executeInDocker ./load-rowan-project.sh \
   GemStone-64-Migration-Tools \
   GemStone-64-Migration-Tools-Deployment
 
+executeInDocker cat "${GEMSTONE_LOG_DIR}"/loading-rowan-projects.log
+
 print_info "Stopping stone"
 docker stop gs64-migration
