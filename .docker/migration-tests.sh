@@ -81,7 +81,7 @@ docker exec --workdir /opt/gemstone/projects/GS64-Migration-Examples \
 
 executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
-  GS64-Migration-Examples
+  GS64-Migration
 
 "Checking migration result"
 
