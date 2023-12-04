@@ -37,7 +37,7 @@ function executeInDocker() {
 }
 
 function assertMigrationLogIncludes() {
-  executeInDocker ./scripts/assertMigrationLogIncludesMessage.sh "$1"
+  docker exec gs64-migration ./scripts/assertMigrationLogIncludesMessage.sh "$1"
 }
 
 set -e
