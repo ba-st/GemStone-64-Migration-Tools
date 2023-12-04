@@ -70,7 +70,9 @@ executeInDocker ./scripts/installInstanceMigrationReporter.sh
 
 print_info "Loading Migration Examples successful_migration version"
 
-executeInDocker cd /opt/gemstone/projects/GS64-Migration-Examples && git checkout successful_migration
+docker exec --workdir /opt/gemstone/projects/GS64-Migration-Examples \
+  gs64-migration \
+  git checkout successful_migration
 
 executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \

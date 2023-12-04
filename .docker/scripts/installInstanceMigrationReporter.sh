@@ -3,7 +3,7 @@
 echo "Installing Instance Migration Reporter"
 
 topaz -i -q <<EOF
-set gemstone gs64stone user SystemUser pass ${SYSTEM_USER_PASSWORD}
+set gemstone gs64stone user SystemUser pass ${GS64_SYSTEM_USER_PASSWORD}
 iferror exit 1
 login
 doit
