@@ -241,13 +241,15 @@ InstanceMigrator >> migrateInstancesOfRenamedClassesFor: script [
 				]
 			]
 		].
-	instancesListing := self instancesListingForAll: oldClasses.
-	oldClasses doWithIndex: [ :oldClass :classIndex |
-		| newClass |
+	oldClasses ifNotEmpty: [
+		instancesListing := self instancesListingForAll: oldClasses.
+		oldClasses doWithIndex: [ :oldClass :classIndex |
+			| newClass |
 
-		newClass := newClasses at: classIndex.
-		self migrate: ( instancesListing at: classIndex * 2 ) of: oldClass to: newClass.
-		self commit
+			newClass := newClasses at: classIndex.
+			self migrate: ( instancesListing at: classIndex * 2 ) of: oldClass to: newClass.
+			self commit
+			]
 		]
 ]
 
