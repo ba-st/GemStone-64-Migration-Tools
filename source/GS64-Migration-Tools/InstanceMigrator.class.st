@@ -331,11 +331,11 @@ InstanceMigrator >> reportRemovedClassesWithInstancesNotMigrated [
 	self commit.
 	instancesListing := self instancesListingForAll: removedClasses.
 	removedClassesWithInstances := OrderedCollection new.
-	1 to: instancesListing size by: 2 do: [ :countIndex |
+	1 to: instancesListing size by: 2 do: [ :countIndex | 
 		"For each class we get a count of the instances in the odd indexes,
 		and an array with the instances in the even indexes"
 		( instancesListing at: countIndex ) = 0 ifFalse: [
-			removedClassesWithInstances add: ( removedClasses at: countIndex // 2 ) ]
+			removedClassesWithInstances add: ( removedClasses at: countIndex // 2 + 1 ) ]
 		].
 
 	removedClassesWithInstances ifNotEmpty: [
