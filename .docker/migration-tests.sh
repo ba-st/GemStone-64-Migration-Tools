@@ -85,7 +85,7 @@ executeInDocker ./load-rowan-project.sh \
 
 print_info "Checking migration result"
 
-executeInDocker ./checkMigrationWasSuccessful.sh
+executeInDocker ./scripts/checkMigrationWasSuccessful.sh
 
 print_info "Stopping stone"
 docker stop gs64-migration
