@@ -48,7 +48,7 @@ docker run --rm --detach --name gs64-migration \
   --volume="$PWD"/.docker/scripts:/opt/gemstone/scripts:ro \
   ghcr.io/ba-st/gs64-rowan:v3.7.0
 
-sleep 1
+sleep 10
 
 print_info "Loading Migration Tools"
 
