@@ -36,6 +36,10 @@ function executeInDocker() {
   cat out
 }
 
+function assertMigrationLogIncludes() {
+  executeInDocker ./scripts/assertMigrationLogIncludesMessage.sh "$1"
+}
+
 set -e
 
 print_info "Starting stone"
@@ -77,6 +81,8 @@ docker exec --workdir /opt/gemstone/projects/GS64-Migration-Examples \
 executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
   GS64-Migration-Examples
+
+assertMigrationLogIncludes "5 classes have new versions"
 
 print_info "Stopping stone"
 docker stop gs64-migration
