@@ -33,6 +33,7 @@ function print_error() {
 function executeInDocker() {
   rm -rf logs out err
   docker exec gs64-migration "$@" > out 2> err || true
+  cat out
 }
 
 set -e
@@ -52,7 +53,15 @@ executeInDocker ./load-rowan-project.sh \
   GemStone-64-Migration-Tools \
   GemStone-64-Migration-Tools-Deployment
 
-executeInDocker cat "${GEMSTONE_LOG_DIR}"/loading-rowan-projects.log
+print_info "Loading Migration Examples base version"
+
+executeInDocker git clone -b base \
+  https://github.com/ba-st/GS64-Migration-Examples.git \
+  /opt/gemstone/projects/GS64-Migration-Examples
+
+executeInDocker ./load-rowan-project.sh \
+  GS64-Migration-Examples \
+  GS64-Migration-Examples
 
 print_info "Stopping stone"
 docker stop gs64-migration
