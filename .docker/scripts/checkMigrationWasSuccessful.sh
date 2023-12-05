@@ -3,6 +3,7 @@
 readonly ANSI_BOLD="\\033[1m"
 readonly ANSI_RED="\\033[31m"
 readonly ANSI_GREEN="\\033[32m"
+readonly ANSI_BLUE="\\033[34m"
 readonly ANSI_RESET="\\033[0m"
 
 function print_error() {
@@ -16,6 +17,14 @@ function print_error() {
 function print_success() {
   if [ -t 1 ]; then
     printf "${ANSI_BOLD}${ANSI_GREEN}%s${ANSI_RESET}\\n" "$1"
+  else
+    echo "$1"
+  fi
+}
+
+function print_info() {
+  if [ -t 1 ]; then
+    printf "${ANSI_BOLD}${ANSI_BLUE}%s${ANSI_RESET}\\n" "$1"
   else
     echo "$1"
   fi
