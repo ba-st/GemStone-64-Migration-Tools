@@ -38,7 +38,8 @@ InstanceMigrator >> applyMigrationScript: script [
 
 	self
 		migrateClassesToLatestVersionFor: script;
-		migrateInstancesOfRenamedClassesFor: script
+		migrateInstancesOfRenamedClassesFor: script;
+		updateInstancesFor: script
 ]
 
 { #category : 'private - actions' }
@@ -389,4 +390,36 @@ InstanceMigrator >> runGarbageCollection [
 	SystemRepository reclaimAllWait: -1.
 	self commit.
 	StdoutReporter printSuccess: [ :out | out << 'Garbage collection completed' ]
+]
+
+{ #category : 'private - actions' }
+InstanceMigrator >> update: instances of: class [
+
+	| migrationReport |
+
+	StdoutReporter printLine: [ :out |
+		out << '=>> Updating ' << instances size asString << ' instances of ' << class name asString ].
+	migrationReport := class migrateInstances: instances to: class.
+	self checkErrorsIn: migrationReport
+]
+
+{ #category : 'private - actions' }
+InstanceMigrator >> updateInstancesFor: script [
+
+	| classes instancesListing |
+
+	classes := OrderedCollection new.
+	script classNamesToUpdateInstances do: [ :className |
+		( Rowan platform globalNamed: className )
+			ifNil: [
+				self migrationFailed.
+				StdoutReporter printError: [ :out |
+					out << 'There''s no class named ' << className
+					<< ' in the system. Review you migration scripts.' ]
+				]
+			ifNotNil: [ :class | classes add: class ]
+		].
+	instancesListing := self instancesListingForAll: classes.
+	classes doWithIndex: [ :class :classIndex |
+		self update: ( instancesListing at: classIndex * 2 ) of: class ]
 ]

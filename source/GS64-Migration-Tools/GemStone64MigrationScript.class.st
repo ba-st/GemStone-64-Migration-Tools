@@ -34,6 +34,15 @@ GemStone64MigrationScript >> classNamesToMigrateToLatestVersion [
 ]
 
 { #category : 'accessing' }
+GemStone64MigrationScript >> classNamesToUpdateInstances [
+	"Returns a collection of class names that need to execute the
+	migrateFrom:instVarMap: method on its instances but don't
+	have shape changes."
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
 GemStone64MigrationScript >> classRenameMappings [
 	"Returns a collection of assocations.
 	For each association the key must be the old class name and the
