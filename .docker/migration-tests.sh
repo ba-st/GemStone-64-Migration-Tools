@@ -83,6 +83,10 @@ executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
   GS64-Migration
 
+print_info "Running consistency checks"
+
+executeInDocker ./scripts/runConsistencyChecks.sh
+
 print_info "Checking migration result"
 
 executeInDocker ./scripts/checkMigrationWasSuccessful.sh
