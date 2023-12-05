@@ -144,7 +144,6 @@ InstanceMigrator >> loadFinished [
 		reportClassesWithNewVersionsNotMigrated;
 		reportRemovedClassesWithInstancesNotMigrated;
 		runGarbageCollection;
-		runConsistencyChecks;
 		reportMigrationResult.
 
 	^ self migrationWasSuccessfull
@@ -363,17 +362,21 @@ InstanceMigrator >> resetRemovedClasses [
 	removedClasses := OrderedCollection new
 ]
 
-{ #category : 'private - actions' }
+{ #category : 'actions' }
 InstanceMigrator >> runConsistencyChecks [
 
+	self runGarbageCollection.
+
 	StdoutReporter printInfo: [ :out | out << 'Running consistency checks...' ].
-	
+
 	StdoutReporter printLine: [ :out | out << '		[1/2] Checking class histories...' ].
 	ClassHistoryChecker new run ifFalse: [ self migrationFailed ].
-	
+
 	StdoutReporter printLine: [ :out | out << '		[2/2] Checking unpublished classes...' ].
 	UnpublishedClassesChecker new run ifFalse: [ self migrationFailed ].
-	StdoutReporter printEmptyLine
+	StdoutReporter printEmptyLine.
+
+	^ self migrationWasSuccessfull
 ]
 
 { #category : 'private - actions' }
@@ -382,6 +385,8 @@ InstanceMigrator >> runGarbageCollection [
 	StdoutReporter printInfo: [ :out | out << 'Running the garbage collection...' ].
 	self commit.
 	SystemRepository fastMarkForCollection.
+	self commit.
 	SystemRepository reclaimAllWait: -1.
+	self commit.
 	StdoutReporter printSuccess: [ :out | out << 'Garbage collection completed' ]
 ]
