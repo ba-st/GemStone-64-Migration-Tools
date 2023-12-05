@@ -30,7 +30,7 @@ function print_info() {
   fi
 }
 
-status=$(topaz -i -q <<EOF
+if topaz -i -q <<EOF
 set gemstone gs64stone user SystemUser pass ${GS64_SYSTEM_USER_PASSWORD}
 iferror exit 1
 login
@@ -41,9 +41,7 @@ run
 logout
 exit 0
 EOF
-)
-
-if [ "$status" -eq 0 ];then
+then
   print_success "Migration ended successfully"
   exit 0
 else
