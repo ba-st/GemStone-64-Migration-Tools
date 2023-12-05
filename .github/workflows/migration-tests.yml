@@ -12,3 +12,5 @@ jobs:
           fetch-depth: 2
       - name: Run instance migration reporting tests using Docker
         run: ./.docker/reporting-tests.sh
+      - name: Run instance migration tests using Docker
+        run: ./.docker/migration-tests.sh
