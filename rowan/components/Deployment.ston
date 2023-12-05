@@ -1,6 +1,5 @@
 RwSimpleProjectLoadComponentV2 {
   #name : 'Deployment',
-  #preloadDoitName : 'scripts/fixTimeZone',  
   #projectNames : [ ],
   #componentNames : [ ],
   #packageNames : [
