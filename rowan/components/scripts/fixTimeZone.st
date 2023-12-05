@@ -8,7 +8,7 @@ anything else."
       ifTrue: [
         | classVersion |
         classVersion := ObsoleteClasses at: obsoleteName.
-        classVersion history removeVersion: classVersion.
+        classVersion classHistory removeVersion: classVersion.
         ObsoleteClasses removeKey: obsoleteName
       ]
   ]
