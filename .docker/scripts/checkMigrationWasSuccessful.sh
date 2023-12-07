@@ -36,7 +36,7 @@ iferror exit 1
 login
 expectvalue true
 run
-  Rowan platform instanceMigrator migrationWasSuccessfull
+  Rowan platform instanceMigrator migrationWasSuccessful
 %
 logout
 exit 0

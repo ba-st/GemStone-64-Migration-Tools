@@ -147,7 +147,7 @@ InstanceMigrator >> loadFinished [
 		runGarbageCollection;
 		reportMigrationResult.
 
-	^ self migrationWasSuccessfull
+	^ self migrationWasSuccessful
 ]
 
 { #category : 'private - actions' }
@@ -272,7 +272,7 @@ InstanceMigrator >> migrationScripts [
 ]
 
 { #category : 'testing' }
-InstanceMigrator >> migrationWasSuccessfull [
+InstanceMigrator >> migrationWasSuccessful [
 
 	^ migrationFailed not
 ]
@@ -318,7 +318,7 @@ InstanceMigrator >> reportClassesWithNewVersionsNotMigrated [
 { #category : 'private - reporting' }
 InstanceMigrator >> reportMigrationResult [
 
-	self migrationWasSuccessfull
+	self migrationWasSuccessful
 		ifTrue: [ StdoutReporter printSuccess: [ :out | out << 'Migration finished successfully.' ] ]
 		ifFalse: [ StdoutReporter printError: [ :out | out << 'Migration finished with errors.' ] ]
 ]
@@ -377,7 +377,7 @@ InstanceMigrator >> runConsistencyChecks [
 	UnpublishedClassesChecker new run ifFalse: [ self migrationFailed ].
 	StdoutReporter printEmptyLine.
 
-	^ self migrationWasSuccessfull
+	^ self migrationWasSuccessful
 ]
 
 { #category : 'private - actions' }
