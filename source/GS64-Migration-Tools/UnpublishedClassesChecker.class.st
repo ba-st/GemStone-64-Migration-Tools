@@ -16,12 +16,15 @@ Class {
 { #category : 'private - testing' }
 UnpublishedClassesChecker >> is: class publishedInAnyOf: allSymbolDictionaries [
 	"Subclasses of PrivateObject are somehow special and it's expected they aren't published.
+	ObsoleteClasses aren't published.
 	For the normal classes we check that they are included in some symbol dictionary"
 
 	^ ( class inheritsFrom: PrivateObject ) or: [
-		  allSymbolDictionaries anySatisfy: [ :symbolDictionary |
-			  ( symbolDictionary includesKey: class name ) and: [
-				  ( symbolDictionary at: class name ) == class ] ]
+		  ( ObsoleteClasses includesKey: class name ) or: [
+			  allSymbolDictionaries anySatisfy: [ :symbolDictionary |
+				  ( symbolDictionary includesKey: class name ) and: [
+					  ( symbolDictionary at: class name ) == class ] ]
+			  ]
 		  ]
 ]
 
