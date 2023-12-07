@@ -387,7 +387,7 @@ InstanceMigrator >> runGarbageCollection [
 	self commit.
 	SystemRepository fastMarkForCollection.
 	self commit.
-	SystemRepository reclaimAllWait: -1.
+	SystemRepository reclaimAll.
 	self commit.
 	StdoutReporter printSuccess: [ :out | out << 'Garbage collection completed' ]
 ]
