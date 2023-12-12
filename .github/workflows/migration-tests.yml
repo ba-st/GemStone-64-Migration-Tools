@@ -17,4 +17,4 @@ jobs:
       - name: Run failed instance migration reporting tests using Docker
         run: ./.docker/failed-reporting-tests.sh
       - name: Run failed instance migration tests using Docker
-        run: ./.docker/failed-migration-tests
+        run: ./.docker/failed-migration-tests.sh
