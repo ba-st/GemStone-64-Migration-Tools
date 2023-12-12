@@ -97,12 +97,12 @@ print_success " - Migration failed as expected [OK]"
 print_info "Running consistency checks"
 
 executeInDocker ./scripts/runFailingConsistencyChecks.sh
-assertMigrationLogIncludes "1 classes have more than one version"
-assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
-assertMigrationLogIncludes "3 classes are unpublished"
-assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
-assertMigrationLogIncludes "ClassToBeRenamed"
-assertMigrationLogIncludes "ClassToChangeSuperclassToStatefull"
+assertConsistencyLogIncludesMessage "1 classes have more than one version"
+assertConsistencyLogIncludesMessage "ClassWithInstanceVariableToBeAdded"
+assertConsistencyLogIncludesMessage "3 classes are unpublished"
+assertConsistencyLogIncludesMessage "ClassWithInstanceVariableToBeAdded"
+assertConsistencyLogIncludesMessage "ClassToBeRenamed"
+assertConsistencyLogIncludesMessage "ClassToChangeSuperclassToStatefull"
 print_success " - Consistency checks failed as expected [OK]"
 
 print_info "Stopping stone"
