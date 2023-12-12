@@ -38,6 +38,10 @@ function assertMigrationLogIncludes() {
   executeInDocker ./scripts/assertMigrationLogIncludesMessage.sh "$1"
 }
 
+function assertConsistencyLogIncludes() {
+  executeInDocker ./scripts/assertConsistencyLogIncludesMessage.sh "$1"
+}
+
 set -e
 
 print_info "Starting stone"
@@ -97,12 +101,12 @@ print_success " - Migration failed as expected [OK]"
 print_info "Running consistency checks"
 
 executeInDocker ./scripts/runFailingConsistencyChecks.sh
-assertConsistencyLogIncludesMessage "1 classes have more than one version"
-assertConsistencyLogIncludesMessage "ClassWithInstanceVariableToBeAdded"
-assertConsistencyLogIncludesMessage "3 classes are unpublished"
-assertConsistencyLogIncludesMessage "ClassWithInstanceVariableToBeAdded"
-assertConsistencyLogIncludesMessage "ClassToBeRenamed"
-assertConsistencyLogIncludesMessage "ClassToChangeSuperclassToStatefull"
+assertConsistencyLogIncludes "1 classes have more than one version"
+assertConsistencyLogIncludes "ClassWithInstanceVariableToBeAdded"
+assertConsistencyLogIncludes "3 classes are unpublished"
+assertConsistencyLogIncludes "ClassWithInstanceVariableToBeAdded"
+assertConsistencyLogIncludes "ClassToBeRenamed"
+assertConsistencyLogIncludes "ClassToChangeSuperclassToStatefull"
 print_success " - Consistency checks failed as expected [OK]"
 
 print_info "Stopping stone"
