@@ -35,7 +35,7 @@ function executeInDocker() {
 }
 
 function assertMigrationLogIncludes() {
-  docker exec gs64-migration ./scripts/assertMigrationLogIncludesMessage.sh "$1"
+  executeInDocker ./scripts/assertMigrationLogIncludesMessage.sh "$1"
 }
 
 set -e
@@ -69,9 +69,9 @@ executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
   GS64-Migration-Examples
 
-print_info "Configuring instance migration reporter"
+print_info "Configuring instance migrator"
 
-executeInDocker ./scripts/installInstanceMigrationReporter.sh
+executeInDocker ./scripts/installInstanceMigrator.sh
 
 print_info "Loading Migration Examples failed_migration version"
 
@@ -81,18 +81,15 @@ docker exec --workdir /opt/gemstone/projects/GS64-Migration-Examples \
 
 executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples \
-  GS64-Migration-Examples
+  GS64-Migration
 
-print_info "Running Assertions"
-assertMigrationLogIncludes "2 classes have new versions"
-assertMigrationLogIncludes "ClassToChangeSuperclassToStatefull"
-assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
-print_success " - Number of classes with new versions [OK]"
+print_info "Checking migration result"
 
-assertMigrationLogIncludes "2 classes were removed"
-assertMigrationLogIncludes "ClassToBeRenamed"
-assertMigrationLogIncludes "ClassToRemoveWithoutInstances"
-print_success " - Number of removed classes [OK]"
+executeInDocker ./scripts/checkMigrationFailed.sh
+
+print_info "Running consistency checks"
+
+executeInDocker ./scripts/runConsistencyChecks.sh
 
 print_info "Stopping stone"
 docker stop gs64-migration
