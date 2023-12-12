@@ -86,10 +86,24 @@ executeInDocker ./load-rowan-project.sh \
 print_info "Checking migration result"
 
 executeInDocker ./scripts/checkMigrationFailed.sh
+assertMigrationLogIncludes "Migration finished with errors."
+assertMigrationLogIncludes "2 instances raised a MigrationError"
+assertMigrationLogIncludes "There are 1 classes with new versions, but no migration command applicable. Review your migration scripts."
+assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
+assertMigrationLogIncludes "There are 1 removed classes but having live instances in the repository."
+assertMigrationLogIncludes "ClassToBeRenamed"
+print_success " - Migration failed as expected [OK]"
 
 print_info "Running consistency checks"
 
-executeInDocker ./scripts/runConsistencyChecks.sh
+executeInDocker ./scripts/runFailingConsistencyChecks.sh
+assertMigrationLogIncludes "1 classes have more than one version"
+assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
+assertMigrationLogIncludes "3 classes are unpublished"
+assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
+assertMigrationLogIncludes "ClassToBeRenamed"
+assertMigrationLogIncludes "ClassToChangeSuperclassToStatefull"
+print_success " - Consistency checks failed as expected [OK]"
 
 print_info "Stopping stone"
 docker stop gs64-migration
