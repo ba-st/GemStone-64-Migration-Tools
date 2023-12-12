@@ -84,10 +84,14 @@ executeInDocker ./load-rowan-project.sh \
   GS64-Migration-Examples
 
 print_info "Running Assertions"
-assertMigrationLogIncludes "5 classes have new versions"
+assertMigrationLogIncludes "2 classes have new versions"
+assertMigrationLogIncludes "ClassToChangeSuperclassToStatefull"
+assertMigrationLogIncludes "ClassWithInstanceVariableToBeAdded"
 print_success " - Number of classes with new versions [OK]"
 
-assertMigrationLogIncludes "7 classes were removed"
+assertMigrationLogIncludes "2 classes were removed"
+assertMigrationLogIncludes "ClassToBeRenamed"
+assertMigrationLogIncludes "ClassToRemoveWithoutInstances"
 print_success " - Number of removed classes [OK]"
 
 print_info "Stopping stone"
