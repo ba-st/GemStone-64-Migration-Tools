@@ -53,3 +53,11 @@ GemStone64MigrationScript >> classRenameMappings [
 
 	^ self subclassResponsibility
 ]
+
+{ #category : 'actions' }
+GemStone64MigrationScript >> instanceMigrationFinished [
+  "This method is sent once all the instance migration steps in this script are finished.
+	Subclasses can reimplement it to run custom actions"
+
+  
+]

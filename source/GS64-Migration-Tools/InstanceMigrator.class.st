@@ -36,10 +36,11 @@ InstanceMigrator >> aboutToRemoveClass: classToRemove [
 { #category : 'private - actions' }
 InstanceMigrator >> applyMigrationScript: script [
 
-	self
-		migrateClassesToLatestVersionFor: script;
-		migrateInstancesOfRenamedClassesFor: script;
-		updateInstancesFor: script
+  self
+    migrateClassesToLatestVersionFor: script;
+    migrateInstancesOfRenamedClassesFor: script;
+    updateInstancesFor: script.
+  script instanceMigrationFinished
 ]
 
 { #category : 'private - actions' }
