@@ -135,20 +135,10 @@ InstanceMigrator >> instancesListingForAll: classes [
 		  memoryOnly: false
 ]
 
-{ #category : 'migration' }
+{ #category : 'reporting' }
 InstanceMigrator >> loadFinished [
 
-	StdoutReporter printLine: [ :out | out << 'Finished loading code changes.' ].
-
-	self
-		initializeMigrationStatus;
-		applyMigrationScripts;
-		reportClassesWithNewVersionsNotMigrated;
-		reportRemovedClassesWithInstancesNotMigrated;
-		runGarbageCollection;
-		reportMigrationResult.
-
-	^ self migrationWasSuccessful
+  StdoutReporter printLine: [ :out | out << 'Finished loading code changes.' ]
 ]
 
 { #category : 'private - actions' }
@@ -391,6 +381,20 @@ InstanceMigrator >> runGarbageCollection [
 	SystemRepository reclaimAll.
 	self commit.
 	StdoutReporter printSuccess: [ :out | out << 'Garbage collection completed' ]
+]
+
+{ #category : 'actions' }
+InstanceMigrator >> runMigration [
+
+  self
+    initializeMigrationStatus;
+    applyMigrationScripts;
+    reportClassesWithNewVersionsNotMigrated;
+    reportRemovedClassesWithInstancesNotMigrated;
+    runGarbageCollection;
+    reportMigrationResult.
+
+  ^ self migrationWasSuccessful
 ]
 
 { #category : 'private - actions' }
